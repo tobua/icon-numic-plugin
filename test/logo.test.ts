@@ -15,7 +15,7 @@ global.afterEach = afterEach
 
 environment('logo')
 
-test('Properly configures empty project.', async () => {
+test('Creates logos in various sizes.', async () => {
   prepare([packageJson('logo')])
 
   const logoPath = join(process.cwd(), 'logo.png')
@@ -29,8 +29,9 @@ test('Properly configures empty project.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(15)
+  expect(files.length).toBe(20)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
+  expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
   expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
 
   const iosContentsPath = join(
@@ -43,4 +44,21 @@ test('Properly configures empty project.', async () => {
   const iconContentsSpecification = readFile(iosContentsPath)
 
   expect(iconContentsSpecification.images[0].filename).toBe('Icon-40.png')
+})
+
+test('Icon path can be configured.', async () => {
+  prepare([packageJson('logo-configured')])
+
+  const logoPath = join(process.cwd(), 'icon/my-image.png')
+
+  cpSync(join(initialCwd, 'test/logo.png'), logoPath, { recursive: true })
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  expect(existsSync(logoPath)).toBe(true)
+
+  await plugin({ options: { icon: 'icon/my-image.png' } })
+
+  const files = listFilesMatching('**/*.png')
+
+  expect(files.length).toBe(20)
 })

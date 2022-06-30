@@ -18,3 +18,18 @@ Numic automatically picks up the plugin once installed and adds the various icon
 - app-icon.png
 - asset/icon.png
 - logo.png (also used as Avatar in SourceTree)
+
+## Configuration
+
+The icon can be configured in `package.json` under the `numic` property. This will override default icon paths from the file system as described above.
+
+```json
+{
+  "name": "my-app",
+  "numic": {
+    "icon-numic-plugin": {
+      "icon": "image/my-icon.png"
+    }
+  }
+}
+```

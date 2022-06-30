@@ -7,11 +7,11 @@ import { contentsWithLinks } from './ios'
 // Alternative: https://github.com/silvia-odwyer/photon
 // https://github.com/aeirola/react-native-svg-app-icon
 // https://www.npmjs.com/package/app-icon (requires imagemagik)
-// https://docs.expo.dev/guides/app-icons/
 
 type Input = {
   cwd?: string
   log?: (message: string, type?: string) => void
+  options?: object
 }
 
 const iconSourcePaths = (cwd: string) => [
@@ -21,7 +21,15 @@ const iconSourcePaths = (cwd: string) => [
   join(cwd, 'logo.png'),
 ]
 
-const getInput = (cwd: string) => {
+const getInput = (cwd: string, options: { icon?: string }) => {
+  if (
+    typeof options === 'object' &&
+    typeof options.icon === 'string' &&
+    existsSync(join(cwd, options.icon))
+  ) {
+    return join(cwd, options.icon)
+  }
+
   const paths = iconSourcePaths(cwd)
   let match: string | undefined
 
@@ -40,7 +48,12 @@ const getAndroidFolders = () => [
   { path: 'android/app/src/main/res/mipmap-xhdpi/ic_launcher.png', size: 96 },
   { path: 'android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png', size: 144 },
   { path: 'android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png', size: 192 },
-  // TODO rounded icons
+  // Round icons.
+  { path: 'android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png', size: 48, round: true },
+  { path: 'android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png', size: 72, round: true },
+  { path: 'android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png', size: 96, round: true },
+  { path: 'android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png', size: 144, round: true },
+  { path: 'android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png', size: 192, round: true },
 ]
 
 const getIOSFolders = (iosImageDirectory: string) => {
@@ -84,9 +97,10 @@ export default async ({
   cwd = process.cwd(),
   // eslint-disable-next-line no-console
   log = console.log,
+  options,
 }: Input) => {
-  const inputFile = getInput(cwd)
-  const sizes = getSizes({ cwd, log })
+  const inputFile = getInput(cwd, options)
+  const sizes = getSizes({ cwd, log, options })
 
   const androidPromises = sizes.android.map((icon) => {
     const destinationFile = join(cwd, icon.path)

@@ -32,7 +32,8 @@
   "sideEffects": false,
   "main": "dist/index.js",
   "exports": {
-    "default": "./dist/index.js"
+    "default": "./dist/index.js",
+    "package.json": "./package.json"
   },
   "types": "dist/index.d.ts",
   "files": [
