@@ -62,3 +62,67 @@ test('Icon path can be configured.', async () => {
 
   expect(files.length).toBe(20)
 })
+
+test('Native output folder can be configured.', async () => {
+  prepare([packageJson('logo-native')])
+
+  const logoPath = join(process.cwd(), 'logo.png')
+
+  cpSync(join(initialCwd, 'test/logo.png'), logoPath)
+  mkdirSync(join(process.cwd(), '.numic/ios/numic/Images.xcassets'), { recursive: true })
+
+  expect(existsSync(logoPath)).toBe(true)
+
+  await plugin({ nativePath: join(process.cwd(), '.numic') })
+
+  const files = listFilesMatching('**/*.png')
+
+  expect(files.length).toBe(20)
+  expect(files.includes('.numic/android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
+  expect(files.includes('.numic/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(
+    true
+  )
+  expect(files.includes('.numic/ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(
+    true
+  )
+})
+
+test('Also works with svg input file.', async () => {
+  prepare([packageJson('logo-svg')])
+
+  const logoPath = join(process.cwd(), 'logo.svg')
+
+  cpSync(join(initialCwd, 'test/logo.svg'), logoPath)
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  expect(existsSync(logoPath)).toBe(true)
+
+  await plugin({ options: { icon: 'logo.svg' } })
+
+  const files = listFilesMatching('**/*.png')
+
+  expect(files.length).toBe(19)
+  expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
+  expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
+  expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
+})
+
+test('Automatically finds svg in default paths.', async () => {
+  prepare([packageJson('logo-svg-default')])
+
+  const logoPath = join(process.cwd(), 'app-icon.svg')
+
+  cpSync(join(initialCwd, 'test/logo.svg'), logoPath)
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  expect(existsSync(logoPath)).toBe(true)
+
+  await plugin({})
+
+  const files = listFilesMatching('**/*.png')
+
+  expect(files.length).toBe(19)
+  expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
+  expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
+  expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
+})

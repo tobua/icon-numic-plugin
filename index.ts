@@ -1,36 +1,39 @@
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
+// Alternative in Rust: https://github.com/silvia-odwyer/photon
 import sharp from 'sharp'
 import { contentsWithLinks } from './ios'
 
-// Sharp Docs: https://sharp.pixelplumbing.com/api-constructor
-// Alternative: https://github.com/silvia-odwyer/photon
 // https://github.com/aeirola/react-native-svg-app-icon
-// https://www.npmjs.com/package/app-icon (requires imagemagik)
 
 type Input = {
-  cwd?: string
+  projectPath?: string
+  nativePath?: string
   log?: (message: string, type?: string) => void
   options?: object
 }
 
-const iconSourcePaths = (cwd: string) => [
-  join(cwd, 'icon.png'),
-  join(cwd, 'app-icon.png'),
-  join(cwd, 'asset/icon.png'),
-  join(cwd, 'logo.png'),
+const iconSourcePaths = (projectPath: string) => [
+  join(projectPath, 'icon.png'),
+  join(projectPath, 'app-icon.png'),
+  join(projectPath, 'asset/icon.png'),
+  join(projectPath, 'logo.png'),
+  join(projectPath, 'icon.svg'),
+  join(projectPath, 'app-icon.svg'),
+  join(projectPath, 'asset/icon.svg'),
+  join(projectPath, 'logo.svg'),
 ]
 
-const getInput = (cwd: string, options: { icon?: string }) => {
+const getInput = (projectPath: string, options: { icon?: string }) => {
   if (
     typeof options === 'object' &&
     typeof options.icon === 'string' &&
-    existsSync(join(cwd, options.icon))
+    existsSync(join(projectPath, options.icon))
   ) {
-    return join(cwd, options.icon)
+    return join(projectPath, options.icon)
   }
 
-  const paths = iconSourcePaths(cwd)
+  const paths = iconSourcePaths(projectPath)
   let match: string | undefined
 
   paths.forEach((path) => {
@@ -74,10 +77,10 @@ const getIOSFolders = (iosImageDirectory: string) => {
   ]
 }
 
-const getSizes = ({ cwd, log }: Input) => {
-  const iosDirectories = readdirSync(join(cwd, 'ios'), { withFileTypes: true })
+const getSizes = ({ nativePath, log }: Input) => {
+  const iosDirectories = readdirSync(join(nativePath, 'ios'), { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
-    .filter((dirent) => existsSync(join(cwd, 'ios', dirent.name, 'Images.xcassets')))
+    .filter((dirent) => existsSync(join(nativePath, 'ios', dirent.name, 'Images.xcassets')))
     .map((dirent) => dirent.name)
   const iosImageDirectory =
     iosDirectories.length > 0 ? join('ios', iosDirectories[0], 'Images.xcassets') : null
@@ -94,16 +97,17 @@ const getSizes = ({ cwd, log }: Input) => {
 }
 
 export default async ({
-  cwd = process.cwd(),
+  projectPath = process.cwd(),
+  nativePath = process.cwd(),
   // eslint-disable-next-line no-console
   log = console.log,
-  options,
+  options = {},
 }: Input) => {
-  const inputFile = getInput(cwd, options)
-  const sizes = getSizes({ cwd, log, options })
+  const inputFile = getInput(projectPath, options)
+  const sizes = getSizes({ nativePath, projectPath, log, options })
 
   const androidPromises = sizes.android.map((icon) => {
-    const destinationFile = join(cwd, icon.path)
+    const destinationFile = join(nativePath, icon.path)
     const directory = dirname(destinationFile)
     if (!existsSync(directory)) {
       mkdirSync(directory, { recursive: true })
@@ -114,7 +118,7 @@ export default async ({
   await Promise.all(androidPromises)
 
   const iosPromises = sizes.ios.map((icon) => {
-    const destinationFile = join(cwd, icon.path)
+    const destinationFile = join(nativePath, icon.path)
     const directory = dirname(destinationFile)
     if (!existsSync(directory)) {
       mkdirSync(directory, { recursive: true })
@@ -126,7 +130,7 @@ export default async ({
 
   // Link ios icons in Contents.json.
   writeFileSync(
-    join(cwd, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
+    join(nativePath, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
     JSON.stringify(contentsWithLinks, null, 2)
   )
 

@@ -14,10 +14,10 @@ npm i --save-dev icon-numic-plugin
 
 Numic automatically picks up the plugin once installed and adds the various icons to the native folders in `/android` and `/ios` without any changes to commit. The only thing **required is an icon** of the recommended size 1024x1024. The plugin will look for icons in the following locations and pick the first match:
 
-- icon.png
-- app-icon.png
-- asset/icon.png
-- logo.png (also used as Avatar in SourceTree)
+- icon.png / icon.svg
+- app-icon.png / app-icon.svg
+- asset/icon.png / asset/icon.svg
+- logo.png / logo.svg (also used as Avatar in SourceTree)
 
 ## Configuration
 
