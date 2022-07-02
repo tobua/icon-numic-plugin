@@ -133,6 +133,4 @@ export default async ({
     join(nativePath, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
     JSON.stringify(contentsWithLinks, null, 2)
   )
-
-  log('App icons created')
 }
