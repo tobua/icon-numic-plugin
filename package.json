@@ -47,10 +47,12 @@
     "react-native"
   ],
   "devDependencies": {
+    "@types/get-pixels": "^3.3.2",
     "@types/sharp": "^0.30.4",
+    "get-pixels": "^3.3.3",
     "jest-fixture": "^3.0.1",
     "padua": "^0.6.1",
-    "vitest": "^0.16.0"
+    "vitest": "^0.21.0"
   },
   "prettier": "padua/configuration/.prettierrc.json",
   "eslintConfig": {

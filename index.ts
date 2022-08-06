@@ -10,7 +10,7 @@ type Input = {
   projectPath?: string
   nativePath?: string
   log?: (message: string, type?: string) => void
-  options?: object
+  options?: { iOSBackground?: string; icon?: string }
 }
 
 const iconSourcePaths = (projectPath: string) => [
@@ -123,7 +123,11 @@ export default async ({
     if (!existsSync(directory)) {
       mkdirSync(directory, { recursive: true })
     }
-    return sharp(inputFile).resize(icon.size, icon.size).toFile(destinationFile)
+    // iOS doesn't support transparent icons and will add a black background, this plugin by default adds a white background.
+    return sharp(inputFile)
+      .flatten({ background: options.iOSBackground ?? '#FFFFFF' })
+      .resize(icon.size, icon.size)
+      .toFile(destinationFile)
   })
 
   await Promise.all(iosPromises)

@@ -23,12 +23,14 @@ Numic automatically picks up the plugin once installed and adds the various icon
 
 The icon can be configured in `package.json` under the `numic` property. This will override default icon paths from the file system as described above.
 
-```json
+```js
 {
   "name": "my-app",
   "numic": {
     "icon-numic-plugin": {
-      "icon": "image/my-icon.png"
+      "icon": "image/my-icon.png",
+      // Convert transparent icons to a black background for iOS, default white.
+      "iOSBackground": "#000000"
     }
   }
 }

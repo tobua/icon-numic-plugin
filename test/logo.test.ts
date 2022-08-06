@@ -2,6 +2,7 @@ import { cpSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { expect, test, beforeEach, afterEach, vi } from 'vitest'
 import { prepare, environment, packageJson, listFilesMatching, readFile } from 'jest-fixture'
+import getPixels from 'get-pixels'
 import plugin from '../index'
 
 const initialCwd = process.cwd()
@@ -125,4 +126,65 @@ test('Automatically finds svg in default paths.', async () => {
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
   expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
+})
+
+test('iOS background transparency can be configured.', async () => {
+  prepare([packageJson('logo-ios-background')])
+
+  const white = '#FFFFFF'
+  const black = '#000000'
+
+  const logoPath = join(process.cwd(), 'icon.png')
+
+  cpSync(join(initialCwd, 'test/logo.png'), logoPath)
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  expect(existsSync(logoPath)).toBe(true)
+
+  await plugin({})
+
+  const someIOSIcon = join(
+    process.cwd(),
+    'ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png'
+  )
+
+  expect(existsSync(someIOSIcon)).toBe(true)
+  let pixels = await new Promise<number[]>((done) =>
+    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
+  )
+
+  expect(pixels[0]).toBe(255) // Red
+  expect(pixels[1]).toBe(255) // Green
+  expect(pixels[2]).toBe(255) // Blue
+  expect(pixels[3]).toBe(255) // Alpha (transparency)
+
+  await plugin({
+    options: {
+      iOSBackground: black,
+    },
+  })
+
+  pixels = await new Promise<number[]>((done) =>
+    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
+  )
+
+  expect(pixels[0]).toBe(0) // Red
+  expect(pixels[1]).toBe(0) // Green
+  expect(pixels[2]).toBe(0) // Blue
+  expect(pixels[3]).toBe(255) // Alpha (transparency)
+
+  await plugin({
+    options: {
+      iOSBackground: white,
+    },
+  })
+
+  pixels = await new Promise<number[]>((done) =>
+    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
+  )
+
+  expect(pixels[0]).toBe(255) // Red
+  expect(pixels[1]).toBe(255) // Green
+  expect(pixels[2]).toBe(255) // Blue
+  expect(pixels[3]).toBe(255) // Alpha (transparency)
 })
