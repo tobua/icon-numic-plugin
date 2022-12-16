@@ -2,15 +2,24 @@ import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 // Alternative in Rust: https://github.com/silvia-odwyer/photon
 import sharp from 'sharp'
+import { generateAndroidAdaptiveIcons } from './adaptive-icon'
 import { contentsWithLinks } from './ios'
 
-// https://github.com/aeirola/react-native-svg-app-icon
+export interface Options {
+  iOSBackground?: string
+  icon?: string
+  androidForeground?: string
+  androidBackground?: string
+  androidBackgroundColor?: string
+}
+
+export type Log = (message: string, type?: 'warning' | 'error') => void
 
 type Input = {
   projectPath?: string
   nativePath?: string
-  log?: (message: string, type?: string) => void
-  options?: { iOSBackground?: string; icon?: string }
+  log?: Log
+  options?: Options
 }
 
 const iconSourcePaths = (projectPath: string) => [
@@ -59,7 +68,7 @@ const getAndroidFolders = () => [
   { path: 'android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png', size: 192, round: true },
 ]
 
-const getIOSFolders = (iosImageDirectory: string) => {
+const getIOSFolders = (iosImageDirectory?: string) => {
   if (!iosImageDirectory) {
     return []
   }
@@ -77,13 +86,13 @@ const getIOSFolders = (iosImageDirectory: string) => {
   ]
 }
 
-const getSizes = ({ nativePath, log }: Input) => {
+const getSizes = (nativePath: string, log: Log) => {
   const iosDirectories = readdirSync(join(nativePath, 'ios'), { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .filter((dirent) => existsSync(join(nativePath, 'ios', dirent.name, 'Images.xcassets')))
     .map((dirent) => dirent.name)
   const iosImageDirectory =
-    iosDirectories.length > 0 ? join('ios', iosDirectories[0], 'Images.xcassets') : null
+    iosDirectories.length > 0 ? join('ios', iosDirectories[0], 'Images.xcassets') : undefined
 
   if (!iosImageDirectory) {
     log('iOS project directory with "Images.xcassets" not found', 'warning')
@@ -104,7 +113,7 @@ export default async ({
   options = {},
 }: Input) => {
   const inputFile = getInput(projectPath, options)
-  const sizes = getSizes({ nativePath, projectPath, log, options })
+  const sizes = getSizes(nativePath, log)
 
   const androidPromises = sizes.android.map((icon) => {
     const destinationFile = join(nativePath, icon.path)
@@ -116,6 +125,8 @@ export default async ({
   })
 
   await Promise.all(androidPromises)
+
+  await generateAndroidAdaptiveIcons(nativePath, options, log)
 
   const iosPromises = sizes.ios.map((icon) => {
     const destinationFile = join(nativePath, icon.path)
@@ -132,9 +143,11 @@ export default async ({
 
   await Promise.all(iosPromises)
 
-  // Link ios icons in Contents.json.
-  writeFileSync(
-    join(nativePath, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
-    JSON.stringify(contentsWithLinks, null, 2)
-  )
+  if (sizes.iosDirectory) {
+    // Link ios icons in Contents.json.
+    writeFileSync(
+      join(nativePath, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
+      JSON.stringify(contentsWithLinks, null, 2)
+    )
+  }
 }

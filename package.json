@@ -23,7 +23,8 @@
     }
   },
   "dependencies": {
-    "sharp": "^0.30.7"
+    "sharp": "^0.31.2",
+    "svg2vectordrawable": "^2.9.1"
   },
   "peerDependencies": {
     "numic": ">= 0.3"
@@ -48,11 +49,11 @@
   ],
   "devDependencies": {
     "@types/get-pixels": "^3.3.2",
-    "@types/sharp": "^0.30.4",
+    "@types/sharp": "^0.31.0",
     "get-pixels": "^3.3.3",
     "jest-fixture": "^3.0.1",
     "padua": "^0.6.1",
-    "vitest": "^0.21.0"
+    "vitest": "^0.25.8"
   },
   "prettier": "padua/configuration/.prettierrc.json",
   "eslintConfig": {

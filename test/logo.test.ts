@@ -149,9 +149,9 @@ test('iOS background transparency can be configured.', async () => {
   )
 
   expect(existsSync(someIOSIcon)).toBe(true)
-  let pixels = await new Promise<number[]>((done) =>
-    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
-  )
+  let pixels = await new Promise<number[]>((done) => {
+    getPixels(someIOSIcon, (_, currentPixels: any) => done(currentPixels.data))
+  })
 
   expect(pixels[0]).toBe(255) // Red
   expect(pixels[1]).toBe(255) // Green
@@ -164,9 +164,9 @@ test('iOS background transparency can be configured.', async () => {
     },
   })
 
-  pixels = await new Promise<number[]>((done) =>
-    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
-  )
+  pixels = await new Promise<number[]>((done) => {
+    getPixels(someIOSIcon, (_, currentPixels: any) => done(currentPixels.data))
+  })
 
   expect(pixels[0]).toBe(0) // Red
   expect(pixels[1]).toBe(0) // Green
@@ -179,9 +179,9 @@ test('iOS background transparency can be configured.', async () => {
     },
   })
 
-  pixels = await new Promise<number[]>((done) =>
-    getPixels(someIOSIcon, (_, pixels: any) => done(pixels.data))
-  )
+  pixels = await new Promise<number[]>((done) => {
+    getPixels(someIOSIcon, (_, currentPixels: any) => done(currentPixels.data))
+  })
 
   expect(pixels[0]).toBe(255) // Red
   expect(pixels[1]).toBe(255) // Green
