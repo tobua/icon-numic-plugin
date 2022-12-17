@@ -85,7 +85,7 @@ export const generateAndroidAdaptiveIcons = async (
 
   if (foregroundType === 'svg') {
     const foregroundSVGContents = readFileSync(
-      join(process.cwd(), options.androidForeground),
+      join(projectPath, options.androidForeground),
       'utf-8'
     )
     const foregroundVector = await convertSVG(foregroundSVGContents)
@@ -94,7 +94,7 @@ export const generateAndroidAdaptiveIcons = async (
 
   if (foregroundType === 'xml') {
     const foregroundXMLContents = readFileSync(
-      join(process.cwd(), options.androidForeground),
+      join(projectPath, options.androidForeground),
       'utf-8'
     )
     writeResFile(nativePath, 'drawable-v24/ic_launcher_foreground.xml', foregroundXMLContents)
@@ -102,7 +102,7 @@ export const generateAndroidAdaptiveIcons = async (
 
   if (!options.androidBackgroundColor && backgroundType === 'svg') {
     const backgroundSVGContents = readFileSync(
-      join(process.cwd(), options.androidBackground as string),
+      join(projectPath, options.androidBackground as string),
       'utf-8'
     )
     const backgroundVector = await convertSVG(backgroundSVGContents)
@@ -111,7 +111,7 @@ export const generateAndroidAdaptiveIcons = async (
 
   if (!options.androidBackgroundColor && backgroundType === 'xml') {
     const backgroundXMLContents = readFileSync(
-      join(process.cwd(), options.androidBackground as string),
+      join(projectPath, options.androidBackground as string),
       'utf-8'
     )
     writeResFile(nativePath, 'drawable/ic_launcher_background.xml', backgroundXMLContents)

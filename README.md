@@ -38,7 +38,7 @@ The icon can be configured in `package.json` under the `numic` property. This wi
       "androidForeground": "image/my-adaptive-foreground.xml",
       "androidBackground": "image/my-adaptive-background.xml",
       // Instead of "androidBackground" it's possible to just set a solid color.
-      "androidBackgroundColor": "red",
+      "androidBackgroundColor": "#FF0000",
     }
   }
 }

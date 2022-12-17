@@ -7,7 +7,9 @@ import { contentsWithLinks } from './ios'
 import { Log, Options } from './types'
 
 type Input = {
+  // Location of the project that has installed the plugin.
   projectPath?: string
+  // Location of the /android and /ios folder where changes should be applied.
   nativePath?: string
   log?: Log
   options?: Options
