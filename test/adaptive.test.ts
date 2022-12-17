@@ -14,6 +14,11 @@ global.beforeEach = beforeEach
 // @ts-ignore
 global.afterEach = afterEach
 
+// TODO should be done for spy in jest-fixture.
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 environment('adaptive')
 
 test('Creates proper description XML files when adaptive icon input is supplied.', async () => {
