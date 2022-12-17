@@ -22,10 +22,19 @@ const androidXMLFiles = () => [
   },
 ]
 
+const solidBackgroundVector = (color: string) => `<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF${color}"
+        android:pathData="M0 0h108v108H0z"/>
+</vector>`
+
 // Options see https://www.npmjs.com/package/svg2vectordrawable
-const convertSVG = async (svgContents: string) => {
-  return svg2vectordrawable(svgContents, { xmlTag: true })
-}
+const convertSVG = (svgContents: string) => svg2vectordrawable(svgContents, { xmlTag: true })
 
 export const getFileType = (fileName?: string) => extname(fileName ?? '').replace('.', '')
 
@@ -106,5 +115,11 @@ export const generateAndroidAdaptiveIcons = async (
       'utf-8'
     )
     writeResFile(nativePath, 'drawable/ic_launcher_background.xml', backgroundXMLContents)
+  }
+
+  if (options.androidBackgroundColor) {
+    // Currently only hex colors allowed.
+    const color = options.androidBackgroundColor.replace('#', '')
+    writeResFile(nativePath, 'drawable/ic_launcher_background.xml', solidBackgroundVector(color))
   }
 }

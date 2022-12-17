@@ -80,3 +80,101 @@ test('Detects file type from name.', () => {
   expect(getFileType('/Absolute/path/somevectordrawable.xml')).toBe('xml')
   expect(getFileType('./relative/path/some-svg.svg')).toBe('svg')
 })
+
+test('SVG images are properly converted.', async () => {
+  prepare([packageJson('adaptive'), file('ios/test.xml', '')])
+
+  // Regular logo, still required.
+  cpSync(join(initialCwd, 'test/logo.png'), join(process.cwd(), 'logo.png'))
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  const backgroundPath = join(process.cwd(), 'background.svg')
+  const foregroundPath = join(process.cwd(), 'foreground.svg')
+
+  cpSync(join(initialCwd, 'test/images/background.svg'), backgroundPath)
+  cpSync(join(initialCwd, 'test/images/foreground.svg'), foregroundPath)
+
+  await plugin({
+    options: {
+      androidBackground: 'background.svg',
+      androidForeground: 'foreground.svg',
+    },
+  })
+
+  const androidXMLFiles = listFilesMatching('android/app/src/main/res/**/*.xml')
+
+  expect(
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml')
+  ).toBe(true)
+  expect(
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml')
+  ).toBe(true)
+
+  const adaptiveLauncherIconContents = readFile(
+    'android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'
+  )
+
+  expect(adaptiveLauncherIconContents).toContain('adaptive-icon')
+
+  const drawableBackgroundContents = readFile(
+    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+  )
+  const drawableForegroundContents = readFile(
+    'android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml'
+  )
+
+  expect(drawableBackgroundContents).toContain('<vector')
+  expect(drawableBackgroundContents).toContain('<?xml')
+  expect(drawableBackgroundContents).toContain('android:fillColor')
+
+  expect(drawableForegroundContents).toContain('<vector')
+  expect(drawableForegroundContents).toContain('<?xml')
+  expect(drawableForegroundContents).toContain('android:fillColor')
+})
+
+test('Solid background color is added when configured.', async () => {
+  let color = 'AABBAA'
+  prepare([packageJson('adaptive'), file('ios/test.xml', '')])
+
+  // Regular logo, still required.
+  cpSync(join(initialCwd, 'test/logo.png'), join(process.cwd(), 'logo.png'))
+  mkdirSync(join(process.cwd(), 'ios/numic/Images.xcassets'), { recursive: true })
+
+  const backgroundPath = join(process.cwd(), 'background.svg')
+  const foregroundPath = join(process.cwd(), 'foreground.svg')
+
+  cpSync(join(initialCwd, 'test/images/background.svg'), backgroundPath)
+  cpSync(join(initialCwd, 'test/images/foreground.svg'), foregroundPath)
+
+  await plugin({
+    options: {
+      androidBackgroundColor: color,
+      androidForeground: 'foreground.svg',
+    },
+  })
+
+  let drawableBackgroundContents = readFile(
+    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+  )
+
+  expect(drawableBackgroundContents).toContain('<vector')
+  expect(drawableBackgroundContents).toContain('<?xml')
+  expect(drawableBackgroundContents).toContain(color)
+
+  // With hex prefix.
+  color = '#AABBAA'
+
+  await plugin({
+    options: {
+      androidBackgroundColor: color,
+      androidForeground: 'foreground.svg',
+    },
+  })
+
+  drawableBackgroundContents = readFile(
+    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+  )
+
+  expect(drawableBackgroundContents).not.toContain(color)
+  expect(drawableBackgroundContents).toContain(color.replace('#', ''))
+})

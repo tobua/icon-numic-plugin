@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm install --legacy-peer-deps
+      - run: npm install --legacy-peer-deps --unsafe-perm
+      - run: npm install --ignore-scripts=false --foreground-scripts --verbose sharp
       - name: 🧪 Test
         run: npm test
       - name: 🚧 Build
