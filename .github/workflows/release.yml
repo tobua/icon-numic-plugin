@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: sudo npm install --legacy-peer-deps --ignore-scripts=false
+      - run: npm install --legacy-peer-deps --ignore-scripts=false
       - name: 🧪 Test
         run: npm test
       - name: 🚧 Build
