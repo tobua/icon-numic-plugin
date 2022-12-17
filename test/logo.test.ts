@@ -14,6 +14,11 @@ global.beforeEach = beforeEach
 // @ts-ignore
 global.afterEach = afterEach
 
+// TODO should be done for spy in jest-fixture.
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 environment('logo')
 
 test('Creates logos in various sizes.', async () => {

@@ -49,6 +49,7 @@ const writeResFile = (nativePath: string, path: string, contents: string) => {
 
 export const generateAndroidAdaptiveIcons = async (
   nativePath: string,
+  projectPath: string,
   options: Options,
   log: Log
 ) => {

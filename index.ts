@@ -119,7 +119,7 @@ export default async ({
 
   await Promise.all(androidPromises)
 
-  await generateAndroidAdaptiveIcons(nativePath, options, log)
+  await generateAndroidAdaptiveIcons(nativePath, projectPath, options, log)
 
   const iosPromises = sizes.ios.map((icon) => {
     const destinationFile = join(nativePath, icon.path)
