@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs'
 import { dirname, join, extname } from 'path'
 import svg2vectordrawable from 'svg2vectordrawable'
-import { Log, Options } from './index'
+import { Log, Options } from './types'
 
 const androidXMLFiles = () => [
   {

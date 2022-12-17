@@ -4,16 +4,7 @@ import { join, dirname } from 'path'
 import sharp from 'sharp'
 import { generateAndroidAdaptiveIcons } from './adaptive-icon'
 import { contentsWithLinks } from './ios'
-
-export interface Options {
-  iOSBackground?: string
-  icon?: string
-  androidForeground?: string
-  androidBackground?: string
-  androidBackgroundColor?: string
-}
-
-export type Log = (message: string, type?: 'warning' | 'error') => void
+import { Log, Options } from './types'
 
 type Input = {
   projectPath?: string
