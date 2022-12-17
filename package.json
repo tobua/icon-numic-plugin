@@ -8,7 +8,7 @@
   "scripts": {
     "build": "padua build",
     "start": "padua watch",
-    "test": "vitest run"
+    "test": "vitest run --no-threads"
   },
   "padua": {
     "esbuild": {
