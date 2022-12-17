@@ -23,7 +23,7 @@
     }
   },
   "dependencies": {
-    "sharp": "0.30.7",
+    "sharp": "^0.31.2",
     "svg2vectordrawable": "^2.9.1"
   },
   "peerDependencies": {
