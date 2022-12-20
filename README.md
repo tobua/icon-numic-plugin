@@ -50,14 +50,16 @@ The icon can be configured in `package.json` under the `numic` property. This wi
 
 Adaptive icons use vector graphics and are composed of a foreground and a background image. Due to using vector graphics only one image size is required. This plugin will generate all the required configuration files as well as the scaled legacy images in various sizes for older devices.
 
-For web developers the easiest way to generate the vector drawables used on Android for adaptive icons is to convert from an SVG. The vector drawable specification is largely the same as SVG so this plugin is able to take SVG icons as input and convert them to XML files in the Android Drawable syntax. It's also possible to directly pass in XML files that are already in the vector drawable format. To generate vector drawables from scratch or debug the output of the conversion from SVG by this plugin, open the `/android` folder in Android Studio. There it's possible to edit and directly preview the images. To get a preview of the resulting images for various Android versions click `Resource Manager` on the left -> `+` icon -> `Image Asset`
+For web developers the easiest way to generate the vector drawables used on Android for adaptive icons is to convert from an SVG. The vector drawable specification is largely the same as SVG so this plugin is able to take SVG icons as input and convert them to XML files in the Android Drawable syntax. It's also possible to directly pass in XML files that are already in the vector drawable format. To generate vector drawables from scratch or debug the output of the conversion from SVG by this plugin, open the `/android` folder in Android Studio. There it's possible to edit and directly preview the images. To get a preview of the resulting images for various Android versions click `Resource Manager` on the left -> `+` icon -> `Image Asset`.
 
 <p align="center">
   <img src="https://github.com/tobua/icon-numic-plugin/raw/main/image/image-asset.png" width="80%" alt="Adaptive Icon preview in Android Studio" />
 </p>
 
+To avoid that parts of the foreground icon are cut off the icon should be centered and only take up about **60%** of the width and height.
+
 <p align="center">
   <a href="https://npmjs.com/react-native-adaptive-icons">
-    <img src="https://github.com/tobua/icon-numic-plugin/raw/main/image/nice-try.png" width="80%" alt="ChatGPT's attempt at Adaptive Icons for React Native" />
+    <img src="https://github.com/tobua/icon-numic-plugin/raw/main/image/nice-try.png" width="70%" alt="ChatGPT's attempt at Adaptive Icons for React Native" />
   </a>
 </p>
