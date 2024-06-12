@@ -7,13 +7,17 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install --legacy-peer-deps
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
       - name: 🧪 Test
-        run: npm test
+        run: bun run test
       - name: 🚧 Build
-        run: npm run build
-      - uses: tobua/release-npm-action@v1
+        run: bun run build
+      - uses: tobua/release-npm-action@v3
         with:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
