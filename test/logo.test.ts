@@ -35,14 +35,14 @@ test('Creates logos in various sizes.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(20)
+  expect(files.length).toBe(19)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
   expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
 
   const iosContentsPath = join(
     process.cwd(),
-    'ios/numic/Images.xcassets/AppIcon.appiconset/Contents.json'
+    'ios/numic/Images.xcassets/AppIcon.appiconset/Contents.json',
   )
 
   expect(existsSync(iosContentsPath)).toBe(true)
@@ -66,7 +66,7 @@ test('Icon path can be configured.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(20)
+  expect(files.length).toBe(19)
 })
 
 test('Native output folder can be configured.', async () => {
@@ -83,13 +83,13 @@ test('Native output folder can be configured.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(20)
+  expect(files.length).toBe(19)
   expect(files.includes('.numic/android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
   expect(files.includes('.numic/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(
-    true
+    true,
   )
   expect(files.includes('.numic/ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(
-    true
+    true,
   )
 })
 
@@ -107,7 +107,7 @@ test('Also works with svg input file.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(19)
+  expect(files.length).toBe(18)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
   expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
@@ -127,7 +127,7 @@ test('Automatically finds svg in default paths.', async () => {
 
   const files = listFilesMatching('**/*.png')
 
-  expect(files.length).toBe(19)
+  expect(files.length).toBe(18)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher.png')).toBe(true)
   expect(files.includes('android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png')).toBe(true)
   expect(files.includes('ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png')).toBe(true)
@@ -150,7 +150,7 @@ test('iOS background transparency can be configured.', async () => {
 
   const someIOSIcon = join(
     process.cwd(),
-    'ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png'
+    'ios/numic/Images.xcassets/AppIcon.appiconset/Icon-80.png',
   )
 
   expect(existsSync(someIOSIcon)).toBe(true)

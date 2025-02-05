@@ -48,28 +48,28 @@ test('Creates proper description XML files when adaptive icon input is supplied.
   const androidPngImages = listFilesMatching('android/**/*.png')
 
   // Regular icons still generated.
-  expect(iosPngImages.length + androidPngImages.length).toBe(19)
+  expect(iosPngImages.length + androidPngImages.length).toBe(18)
 
   const androidXMLFiles = listFilesMatching('android/app/src/main/res/**/*.xml')
 
   expect(
-    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml')
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'),
   ).toBe(true)
   expect(
-    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml')
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml'),
   ).toBe(true)
 
   const adaptiveLauncherIconContents = readFile(
-    'android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'
+    'android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
   )
 
   expect(adaptiveLauncherIconContents).toContain('adaptive-icon')
 
   const drawableBackgroundContents = readFile(
-    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+    'android/app/src/main/res/drawable/ic_launcher_background.xml',
   )
   const drawableForegroundContents = readFile(
-    'android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml'
+    'android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml',
   )
 
   expect(drawableBackgroundContents).toContain('<vector')
@@ -109,23 +109,23 @@ test('SVG images are properly converted.', async () => {
   const androidXMLFiles = listFilesMatching('android/app/src/main/res/**/*.xml')
 
   expect(
-    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml')
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'),
   ).toBe(true)
   expect(
-    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml')
+    androidXMLFiles.includes('android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml'),
   ).toBe(true)
 
   const adaptiveLauncherIconContents = readFile(
-    'android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml'
+    'android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
   )
 
   expect(adaptiveLauncherIconContents).toContain('adaptive-icon')
 
   const drawableBackgroundContents = readFile(
-    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+    'android/app/src/main/res/drawable/ic_launcher_background.xml',
   )
   const drawableForegroundContents = readFile(
-    'android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml'
+    'android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml',
   )
 
   expect(drawableBackgroundContents).toContain('<vector')
@@ -159,7 +159,7 @@ test('Solid background color is added when configured.', async () => {
   })
 
   let drawableBackgroundContents = readFile(
-    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+    'android/app/src/main/res/drawable/ic_launcher_background.xml',
   )
 
   expect(drawableBackgroundContents).toContain('<vector')
@@ -177,7 +177,7 @@ test('Solid background color is added when configured.', async () => {
   })
 
   drawableBackgroundContents = readFile(
-    'android/app/src/main/res/drawable/ic_launcher_background.xml'
+    'android/app/src/main/res/drawable/ic_launcher_background.xml',
   )
 
   expect(drawableBackgroundContents).not.toContain(color)

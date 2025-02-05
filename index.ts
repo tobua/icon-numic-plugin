@@ -73,7 +73,6 @@ const getIOSFolders = (iosImageDirectory?: string) => {
     { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-80.png`, size: 80 },
     { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-87.png`, size: 87 },
     { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-120.png`, size: 120 },
-    { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-121.png`, size: 121 },
     { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-180.png`, size: 180 },
     { path: `${iosImageDirectory}/AppIcon.appiconset/Icon-1024.png`, size: 1024 },
   ]
@@ -140,7 +139,7 @@ export default async ({
     // Link ios icons in Contents.json.
     writeFileSync(
       join(nativePath, sizes.iosDirectory, 'AppIcon.appiconset/Contents.json'),
-      JSON.stringify(contentsWithLinks, null, 2)
+      JSON.stringify(contentsWithLinks, null, 2),
     )
   }
 }
